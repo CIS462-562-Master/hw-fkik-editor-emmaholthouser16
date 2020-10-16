@@ -205,6 +205,8 @@ public:
 		const std::vector<ASplineVec3::Key>& keys,
 		const std::vector<vec3>& ctrlPoints,
 		int segment, double u);
+
+	std::vector<vec3> shortestPathL(vec3 key0, vec3 key1);
 };
 
 class AEulerCubicInterpolatorVec3 : public ACubicInterpolatorVec3
@@ -220,6 +222,8 @@ public:
 		const std::vector<ASplineVec3::Key>& keys,
 		std::vector<vec3>& ctrlPoints,
 		vec3& startPt, vec3& endPt);
+
+	std::vector<vec3> shortestPathC(vec3 key0, vec3 key1);
 };
 
 

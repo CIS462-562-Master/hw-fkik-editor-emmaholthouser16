@@ -131,6 +131,65 @@ void ASplineQuat::computeControlPoints(quat& startQuat, quat& endQuat)
 		//  as was used with the SplineVec implementation
 		//  Hint: use the SDouble, SBisect and Slerp to compute b1 and b2
 
+		if (mKeys.size() == 2)
+		{
+			b0 = mKeys[segment].second;
+			b3 = mKeys[segment + 1].second;
+
+			q_1 = quat::SDouble(startQuat, mKeys[segment].second);
+			q0 = quat::SBisect(q_1, mKeys[segment + 1].second);
+			q1 = quat::SDouble(endQuat, mKeys[segment + 1].second);
+			q2 = quat::SBisect(mKeys[segment].second, q1);
+
+			b1 = quat::Slerp(mKeys[segment].second, q0, 1 / 3);
+			b2 = quat::Slerp(mKeys[segment + 1].second, q2, 1 / 3);
+		}
+		else if (segment == 0)
+		{
+			b0 = mKeys[segment].second;
+			b3 = mKeys[segment + 1].second;
+
+			q_1 = quat::SDouble(startQuat, mKeys[segment].second);
+			q0 = quat::SBisect(q_1, mKeys[segment + 1].second);
+			q1 = quat::SDouble(mKeys[segment + 2].second, mKeys[segment + 1].second);
+			q2 = quat::SBisect(mKeys[segment].second, q1);
+
+			b1 = quat::Slerp(mKeys[segment].second, q0, 1 / 3);
+			b2 = quat::Slerp(mKeys[segment + 1].second, q2, 1 / 3);
+
+		}
+		else if (segment == mKeys.size() - 2)
+		{
+			b0 = mKeys[segment].second;
+			b3 = mKeys[segment + 1].second;
+
+			q_1 = quat::SDouble(mKeys[segment - 1].second, mKeys[segment].second);
+			q0 = quat::SBisect(q_1, mKeys[segment + 1].second);
+			q1 = quat::SDouble(endQuat, mKeys[segment + 1].second);
+			q2 = quat::SBisect(mKeys[segment].second, q1);
+
+			b1 = quat::Slerp(mKeys[segment].second, q0, 1 / 3);
+			b2 = quat::Slerp(mKeys[segment + 1].second, q2, 1 / 3);
+		}
+		else
+		{
+			b0 = mKeys[segment].second;
+			b3 = mKeys[segment + 1].second;
+
+			q_1 = quat::SDouble(mKeys[segment - 1].second, mKeys[segment].second);
+			q0 = quat::SBisect(q_1, mKeys[segment + 1].second);
+			q1 = quat::SDouble(mKeys[segment + 2].second, mKeys[segment + 1].second);
+			q2 = quat::SBisect(mKeys[segment].second, q1);
+
+			b1 = quat::Slerp(mKeys[segment].second, q0, 1 / 3);
+			b2 = quat::Slerp(mKeys[segment + 1].second, q2, 1 / 3);
+		}
+
+
+
+		
+		//mKeys[segment].second
+		std::cout << "control points" << std::endl;
 
 		mCtrlPoints.push_back(b0);
 		mCtrlPoints.push_back(b1);
@@ -144,9 +203,12 @@ quat ASplineQuat::getLinearValue(double t)
 
 	quat q;
 	int segment = getCurveSegment(t);
-
+	double u;
+	u = (t - mKeys[segment].first) / (mKeys[segment + 1].first - mKeys[segment].first);
+	//u = t / 3 - segment;
 	// TODO: student implementation goes here
 	// compute the value of a linear quaternion spline at the value of t using slerp
+	q = quat::Slerp(mKeys[segment].second, mKeys[segment + 1].second, u);
 
 	return q;	
 }
@@ -172,10 +234,16 @@ quat ASplineQuat::getCubicValue(double t)
 {
 	quat q, b0, b1, b2, b3;
 	int segment = getCurveSegment(t);
+	b0 = mCtrlPoints[segment * 4];
+	b1 = mCtrlPoints[segment * 4 + 1];
+	b2 = mCtrlPoints[segment * 4 + 2];
+	b3 = mCtrlPoints[segment * 4 + 3];
 
+	double u = (t - mKeys[segment].first ) / (mKeys[segment + 1].first - mKeys[segment].first);
 	// TODO: student implementation goes here
 	// compute the value of a cubic quaternion spline at the value of t using Scubic
-
+	std::cout << "get Cubic" << std::endl;
+	q = q.quat::Scubic(b0, b1, b2, b3, u);
 	return q;
 }
 

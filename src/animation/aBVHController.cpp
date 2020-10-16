@@ -52,7 +52,45 @@ void BVHController::setActor(AActor* actor)
 
 void BVHController::update(double time, bool updateRootXZTranslation)
 {
-	// TODO: Given the current value of time, 
+	// TODO: Given the current value of time,
+	vec3 v = mRootMotion.getValue(time);
+	mSkeleton->getRootNode->setLocalTranslatin(v);
+
+	if (!updateRootXZTranslation) {
+		vec3 v2 = (0, v[1], 0);
+		mSkeleton->getRootNode()->setLocalTranslation(v);
+
+	}
+
+	for (int i = 0; i < mSkeleton->getNumJoints(); i++)
+	{
+
+		quat q = mMotion[i].getCachedValue(time);
+		mat3 m = q.ToRotation();
+		m.Transpose();
+		mSkeleton->getJointByID(i)->setLocalRotation(m); 
+	}
+	int n = mSkeleton->getRootNode()->getID();
+	quat q2 = mMotion[n].getCachedValue(time);
+	mat3 m2 = q2.ToRotation();
+	m2.Transpose();
+	mSkeleton->getRootNode()->setLocalRotation(m2);
+	
+
+	
+	mSkeleton->update();
+	
+	
+	
+
+	//mSkeleton->getRootNode()->setLocalRotation(m2);
+
+	
+	//int x = mSkeleton->getRootNode->getID;
+	//mSkeleton->getRootNode->setLocalTranslation = mMot
+	//mRootMotion;
+	
+
 	// 1. set the local transforms at each Skeleton joint using the cached spline data in member variables mRootMotion and mMotion 
 	// 2. update the joint transforms of the full skeleton in order to compute the global transforms at each joint
 	// Hint: the root can both rotate and translate (i.e. has 6 DOFs) while all the other joints just rotate 
