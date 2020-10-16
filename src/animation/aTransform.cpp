@@ -38,7 +38,7 @@ ATransform ATransform::Inverse() const
 	 result.m_translation = (- m_rotation.Transpose()) * m_translation;
 	 mat3 m = m_rotation.Transpose();
 
-	return ATransform(m, m * - m_translation);
+	return result;
 }
 
 

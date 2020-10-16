@@ -54,7 +54,7 @@ void BVHController::update(double time, bool updateRootXZTranslation)
 {
 	// TODO: Given the current value of time,
 	vec3 v = mRootMotion.getValue(time);
-	mSkeleton->getRootNode->setLocalTranslatin(v);
+	mSkeleton->getRootNode()->setLocalTranslation(v);
 
 	if (!updateRootXZTranslation) {
 		vec3 v2 = (0, v[1], 0);
@@ -67,13 +67,13 @@ void BVHController::update(double time, bool updateRootXZTranslation)
 
 		quat q = mMotion[i].getCachedValue(time);
 		mat3 m = q.ToRotation();
-		m.Transpose();
+		//m.Transpose();
 		mSkeleton->getJointByID(i)->setLocalRotation(m); 
 	}
 	int n = mSkeleton->getRootNode()->getID();
 	quat q2 = mMotion[n].getCachedValue(time);
 	mat3 m2 = q2.ToRotation();
-	m2.Transpose();
+	//m2.Transpose();
 	mSkeleton->getRootNode()->setLocalRotation(m2);
 	
 

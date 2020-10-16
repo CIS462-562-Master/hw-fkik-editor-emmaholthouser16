@@ -127,11 +127,6 @@ void ASkeleton::update()
 	if (!mRoot) return; // Nothing loaded
 
 	// TODO: Update Joint Transforms recursively, starting at the root
-	/*for (int i = 0; i < mJoints.size(); i++)
-	{
-		mJoints[i]->updateTransform;
-	} */
-	//recurvisze
 	mRoot->updateTransform();
 
 }
