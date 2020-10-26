@@ -153,7 +153,7 @@ void AActor::solveFootIK(float leftHeight, float rightHeight, bool rotateLeft, b
 		m_pSkeleton->getRootNode()->setLocalTranslation(newRight);
 	}
 
-	m_pSkeleton->update();
+	//m_pSkeleton->update();
 
 	ATarget leftTarget;
 	vec3 leftLoc = leftFoot->getGlobalTranslation();
@@ -167,10 +167,12 @@ void AActor::solveFootIK(float leftHeight, float rightHeight, bool rotateLeft, b
 	vec3 rightTarg = vec3(rightLoc[0], rightLoc[1] + rightHeight, rightLoc[2]);
 	rightTarget.setGlobalTranslation(rightTarg);
 	
-	//m_pSkeleton->update();
+	m_pSkeleton->update();
 	//compute the limb ik for the left and the right foot
 	m_IKController->IKSolver_Limb(m_IKController->mRfootID, rightTarget);
 	m_IKController->IKSolver_Limb(m_IKController->mLfootID, leftTarget);
+
+	//m_pSkeleton->update();
 	
 	if (rotateLeft)
 	{
